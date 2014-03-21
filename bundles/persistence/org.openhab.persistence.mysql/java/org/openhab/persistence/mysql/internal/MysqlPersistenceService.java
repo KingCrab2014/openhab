@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-2013, openHAB.org and others.
+ * Copyright (c) 2010-2014, openHAB.org and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  * DimmerItem        PercentType   TINYINT
  * NumberItem        DecimalType   DOUBLE
  * RollershutterItem PercentType   TINYINT
- * StringItem        StringType    VARCHAR(65500)
+ * StringItem        StringType    VARCHAR(20000)
  * SwitchItem        OnOffType     CHAR(3)
  * 
  * In the store method, type conversion is performed where the default type for
@@ -114,7 +114,7 @@ public class MysqlPersistenceService implements QueryablePersistenceService, Man
 		sqlTypes.put("GROUPITEM", "DOUBLE");
 		sqlTypes.put("NUMBERITEM", "DOUBLE");
 		sqlTypes.put("ROLERSHUTTERITEM", "TINYINT");
-		sqlTypes.put("STRINGITEM", "VARCHAR(65500)");
+		sqlTypes.put("STRINGITEM", "VARCHAR(20000)");
 		sqlTypes.put("SWITCHITEM", "CHAR(3)");
 	}
 
@@ -564,12 +564,12 @@ public class MysqlPersistenceService implements QueryablePersistenceService, Man
 
 				if (item instanceof NumberItem)
 					state = new DecimalType(rs.getDouble(2));
+				else if (item instanceof DimmerItem)
+					state = new PercentType(rs.getInt(2));
 				else if (item instanceof SwitchItem)
 					state = OnOffType.valueOf(rs.getString(2));
 				else if (item instanceof ContactItem)
 					state = OpenClosedType.valueOf(rs.getString(2));
-				else if (item instanceof DimmerItem)
-					state = new PercentType(rs.getInt(2));
 				else if (item instanceof RollershutterItem)
 					state = new PercentType(rs.getInt(2));
 				else if (item instanceof ColorItem)
